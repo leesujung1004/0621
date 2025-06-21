@@ -9,7 +9,7 @@ st.markdown("GitHub에서 불러온 **bakery.csv** 파일을 기반으로 빵집
 # ----------------- 데이터 불러오기 -----------------
 @st.cache_data
 def load_data():
-    url = "https://raw.githubusercontent.com/leesujung1004/0621/main/bakery.csv"
+    url = "bakery.csv"
     df = pd.read_csv(url)
     df = df.dropna(subset=["상호명", "영업상태"])  # 필수 컬럼 결측 제거
     return df
