@@ -1,1 +1,41 @@
+import streamlit as st
+import pandas as pd
+
+# ----------------- 기본 설정 -----------------
+st.set_page_config(page_title="🥐 빵집 영업 상태 확인기", layout="wide")
+st.title("🍞 우리 동네 빵집, 아직 영업 중일까?")
+st.markdown("CSV 파일 기반으로 **영업 중**인 빵집과 **폐업**한 빵집을 구분합니다.")
+
+# ----------------- CSV 파일 로드 -----------------
+@st.cache_data
+def load_data():
+    df = pd.read_csv("bakery.csv")
+    df = df.dropna(subset=["상호명", "영업상태"])  # 필수값이 없는 행 제거
+    return df
+
+df = load_data()
+
+# ----------------- 필터 선택 -----------------
+status_filter = st.radio("🔍 어떤 빵집을 볼까요?", ["전체 보기", "영업중", "폐업"])
+
+if status_filter == "영업중":
+    filtered = df[df["영업상태"].str.contains("영업", na=False)]
+elif status_filter == "폐업":
+    filtered = df[df["영업상태"].str.contains("폐업", na=False)]
+else:
+    filtered = df.copy()
+
+# ----------------- 데이터 출력 -----------------
+st.subheader(f"📋 조회 결과: {len(filtered)}개 빵집")
+
+st.dataframe(
+    filtered[["상호명", "주소", "영업상태", "전화번호"]].reset_index(drop=True),
+    use_container_width=True
+)
+
+# ----------------- 통계 시각화 -----------------
+st.divider()
+st.subheader("📊 영업/폐업 통계")
+status_count = df["영업상태"].value_counts()
+st.bar_chart(status_count)
 
