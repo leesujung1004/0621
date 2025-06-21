@@ -49,5 +49,8 @@ fig.update_layout(
     title="📊 최근 1년간 글로벌 시가총액 TOP10 기업의 주가 추이",
     xaxis_title="날짜",
     yaxis_title="종가 (USD)",
-    templat
+    template="plotly_white",
+    hovermode="x unified"
+)
 
+st.plotly_chart(fig, use_container_width=True)
